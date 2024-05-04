@@ -1,0 +1,39 @@
+name: Python Data Processing
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'data_throughput.py'
+      - 'dropped_calls.py'
+      - 'requirements.txt'
+
+jobs:
+  process_data:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+
+    - name: Install Python dependencies
+      run: pip install -r requirements.txt
+
+    - name: Execute data_throughput script
+      run: python data_throughput.py
+
+    - name: Execute dropped_calls script
+      run: python dropped_calls.py
+
+    - name: Archive results
+      uses: actions/upload-artifact@v2
+      with:
+        name: results
+        path: |
+          ./output_data_throughput.csv
+          ./output_dropped_calls.csv
